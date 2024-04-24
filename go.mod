@@ -1,3 +1,3 @@
-module github.com/tjapit/go-interpreter
+module github.com/tjapit/monkey
 
 go 1.21.6

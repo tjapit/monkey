@@ -1,4 +1,4 @@
-# Go Interpreter
+# Monkey - Writing An Interpreter In Go
 
 source: [Writing An Interpreter In Go](https://interpreterbook.com/)
 
