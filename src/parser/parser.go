@@ -67,6 +67,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
+	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	// infix parse functions
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -83,6 +84,63 @@ func New(l *lexer.Lexer) *Parser {
 	p.nextToken()
 
 	return p
+}
+
+func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	params := []*ast.Identifier{}
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return params
+	}
+
+	p.nextToken()
+
+	param, ok := p.parseIdentifier().(*ast.Identifier)
+	if !ok {
+		return nil
+	}
+	params = append(params, param)
+
+	// own impl, might cause bugs
+	for !p.peekTokenIs(token.RPAREN) {
+		if !p.expectPeek(token.COMMA) {
+			return nil
+		}
+
+		p.nextToken()
+		param, ok := p.parseIdentifier().(*ast.Identifier)
+		if !ok {
+			return nil
+		}
+		params = append(params, param)
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return params
+}
+
+func (p *Parser) parseFunctionLiteral() ast.Expression {
+	function := &ast.FunctionLiteral{
+		Token: p.curToken,
+	}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	function.Parameters = p.parseFunctionParameters()
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	function.Body = p.parseBlockStatement()
+
+	return function
 }
 
 func (p *Parser) parseBlockStatement() *ast.BlockStatement {
