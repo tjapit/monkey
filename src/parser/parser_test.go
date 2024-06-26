@@ -865,7 +865,7 @@ func TestCallExpressionParsing(t *testing.T) {
 	testInfixExpression(t, exp.Arguments[2], 4, "+", 5)
 }
 
-func TestCallExpressionParameterParsing(t *testing.T) {
+func TestCallExpressionArgumentParsing(t *testing.T) {
 	testCases := []struct {
 		desc          string
 		input         string
@@ -885,10 +885,10 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 			expectedArgs:  []string{"1"},
 		},
 		{
-			desc:          "0 args",
+			desc:          ">1 args",
 			input:         "add(1, 2 * 3, 4 + 5);",
 			expectedIdent: "add",
-			expectedArgs:  []string{"1", "2 * 3", "4 + 5"},
+			expectedArgs:  []string{"1", "(2 * 3)", "(4 + 5)"},
 		},
 	}
 	for _, tC := range testCases {
