@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/tjapit/monkey/src/evaluator"
 	"github.com/tjapit/monkey/src/lexer"
 	"github.com/tjapit/monkey/src/parser"
 )
@@ -45,8 +46,11 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		evaluated := evaluator.Eval(program)
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
 	}
 }
 
