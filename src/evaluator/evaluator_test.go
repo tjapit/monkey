@@ -64,22 +64,22 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	return true
 }
 
-func TestEvalBooleanLiteral(t *testing.T) {
+func TestEvalBooleanExpression(t *testing.T) {
 	testCases := []struct {
 		desc     string
 		input    string
 		expected bool
 	}{
-		{
-			desc:     "Test true",
-			input:    "true;",
-			expected: true,
-		},
-		{
-			desc:     "Test false",
-			input:    "false;",
-			expected: false,
-		},
+		{"Test 1", "true", true},
+		{"Test 2", "false", false},
+		{"Test 3", "1 < 2", true},
+		{"Test 4", "1 > 2", false},
+		{"Test 5", "1 < 1", false},
+		{"Test 6", "1 > 1", false},
+		{"Test 7", "1 == 1", true},
+		{"Test 8", "1 != 1", false},
+		{"Test 9", "1 == 2", false},
+		{"Test 10", "1 != 2", true},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -126,3 +126,4 @@ func TestBangOperator(t *testing.T) {
 		})
 	}
 }
+
