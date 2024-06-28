@@ -80,6 +80,15 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"Test 8", "1 != 1", false},
 		{"Test 9", "1 == 2", false},
 		{"Test 10", "1 != 2", true},
+		{"Test 11", "true == true", true},
+		{"Test 12", "false == false", true},
+		{"Test 13", "true == false", false},
+		{"Test 14", "true != false", true},
+		{"Test 15", "false != true", true},
+		{"Test 16", "(1 < 2) == true", true},
+		{"Test 17", "(1 < 2) == false", false},
+		{"Test 18", "(1 > 2) == true", false},
+		{"Test 19", "(1 > 2) == false", true},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -126,4 +135,3 @@ func TestBangOperator(t *testing.T) {
 		})
 	}
 }
-
