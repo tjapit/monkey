@@ -170,3 +170,38 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 	}
 	return true
 }
+
+func TestReturnStatements(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected int64
+	}{
+		{"Test 1", "return 10;", 10},
+		{"Test 2", "return 10; 9;", 10},
+		{"Test 3", "return 2 * 5; 9;", 10},
+		{"Test 4", "9; return 2 * 5; 9;", 10},
+		{"Test 5", `
+if (10 > 1) {
+  if (10 > 1) {
+    return 10;
+  }
+
+  return 1;
+}`, 10},
+		{"Test 6", `
+if (10 > 1) {
+  if (10 < 1) {
+    return 10;
+  }
+
+  return 1;
+}`, 1},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			evaluated := testEval(tC.input)
+			testIntegerObject(t, evaluated, tC.expected)
+		})
+	}
+}
