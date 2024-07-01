@@ -205,3 +205,78 @@ if (10 > 1) {
 		})
 	}
 }
+
+func TestErrorHandling(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected string
+	}{
+		{
+			desc:     "Test 1",
+			input:    "5 + true;",
+			expected: "type mismatch: INTEGER + BOOLEAN",
+		},
+		{
+			desc:     "Test 2",
+			input:    "5 + true; 5;",
+			expected: "type mismatch: INTEGER + BOOLEAN",
+		},
+		{
+			desc:     "Test 3",
+			input:    "-true",
+			expected: "unknown operator: -BOOLEAN",
+		},
+		{
+			desc:     "Test 4",
+			input:    "true + false;",
+			expected: "unknown operator: BOOLEAN + BOOLEAN",
+		},
+		{
+			desc:     "Test 5",
+			input:    "5; true + false; 5",
+			expected: "unknown operator: BOOLEAN + BOOLEAN",
+		},
+
+		{
+			desc:     "Test 6",
+			input:    "if (10 > 1) { true + false; }",
+			expected: "unknown operator: BOOLEAN + BOOLEAN",
+		},
+		{
+			desc: "Test 7",
+			input: `
+      if (10 > 1) {
+        if (10 > 1) {
+          return true + false;
+        }
+
+        return 1;
+      }`,
+			expected: "unknown operator: BOOLEAN + BOOLEAN",
+		},
+	}
+
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			evaluated := testEval(tC.input)
+
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf(
+					"no error object returned. got=%T(%+v)",
+					evaluated,
+					evaluated,
+				)
+				t.FailNow()
+			}
+			if errObj.Message != tC.expected {
+				t.Errorf(
+					"wrong error message. want=%q, got=%q",
+					tC.expected,
+					errObj.Message,
+				)
+			}
+		})
+	}
+}
