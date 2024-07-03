@@ -42,8 +42,9 @@ func testEval(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
 	program := p.ParseProgram()
+	env := object.NewEnvironment()
 
-	return Eval(program)
+	return Eval(program, env)
 }
 
 func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
@@ -255,6 +256,11 @@ func TestErrorHandling(t *testing.T) {
       }`,
 			expected: "unknown operator: BOOLEAN + BOOLEAN",
 		},
+		{
+			desc:     "Test 8",
+			input:    "foobar",
+			expected: "identifier not found: foobar",
+		},
 	}
 
 	for _, tC := range testCases {
@@ -277,6 +283,40 @@ func TestErrorHandling(t *testing.T) {
 					errObj.Message,
 				)
 			}
+		})
+	}
+}
+
+func TestLetStatements(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected int64
+	}{
+		{
+			desc:     "Test 1",
+			input:    "let a = 5; a;",
+			expected: 5,
+		},
+		{
+			desc:     "Test 2",
+			input:    "let a = 5 * 5; a;",
+			expected: 25,
+		},
+		{
+			desc:     "Test 3",
+			input:    "let a = 5; let b = a; b;",
+			expected: 5,
+		},
+		{
+			desc:     "Test 4",
+			input:    "let a = 5; let b = a; let c = a + b + 5; c;",
+			expected: 15,
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			testIntegerObject(t, testEval(tC.input), tC.expected)
 		})
 	}
 }
