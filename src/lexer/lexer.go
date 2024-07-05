@@ -1,6 +1,10 @@
 package lexer
 
-import "github.com/tjapit/monkey/src/token"
+import (
+	"strings"
+
+	"github.com/tjapit/monkey/src/token"
+)
 
 type Lexer struct {
 	input        string
@@ -102,14 +106,24 @@ func (l *Lexer) NextToken() token.Token {
 }
 
 func (l *Lexer) readString() string {
-  position := l.position + 1
-  for {
-    l.readChar()
-    if l.ch == '"' || l.ch == 0 {
-      break
-    }
-  }
-  return l.input[position: l.position]
+	position := l.position + 1
+	for {
+		l.readChar()
+		if l.ch == '\\' {
+			l.readChar() // account for escape sequences
+			continue
+		}
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
+	}
+	result := l.input[position:l.position]
+
+	result = strings.ReplaceAll(result, "\\n", "\n")
+	result = strings.ReplaceAll(result, "\\t", "\t")
+	result = strings.ReplaceAll(result, "\\\"", "\"")
+
+	return result
 }
 
 func (l *Lexer) skipWhitespace() {
