@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/tjapit/monkey/src/lexer"
@@ -413,4 +414,19 @@ addTwo(2);`
 
 	expected := 4
 	testIntegerObject(t, testEval(input), int64(expected))
+}
+
+func TestStringLiteral(t *testing.T) {
+	expected := "Hello World!"
+	input := fmt.Sprintf(`"%s"`, expected)
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != expected {
+		t.Errorf("String has wrong value. want=%q, got=%q", expected, str.Value)
+	}
 }
