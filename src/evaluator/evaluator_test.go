@@ -275,6 +275,11 @@ func TestErrorHandling(t *testing.T) {
 			input:    "foobar",
 			expected: "identifier not found: foobar",
 		},
+		{
+			desc:     "Test 9",
+			input:    `"Hello" - "World"`,
+			expected: "unknown operator: STRING - STRING",
+		},
 	}
 
 	for _, tC := range testCases {
@@ -419,6 +424,21 @@ addTwo(2);`
 func TestStringLiteral(t *testing.T) {
 	expected := "Hello World!"
 	input := fmt.Sprintf(`"%s"`, expected)
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != expected {
+		t.Errorf("String has wrong value. want=%q, got=%q", expected, str.Value)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	expected := "Hello World!"
+	input := `"Hello" + " " + "World!"`
 
 	evaluated := testEval(input)
 	str, ok := evaluated.(*object.String)
