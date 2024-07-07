@@ -450,3 +450,55 @@ func TestStringConcatenation(t *testing.T) {
 		t.Errorf("String has wrong value. want=%q, got=%q", expected, str.Value)
 	}
 }
+
+func TestBuiltinFunction(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected interface{}
+	}{
+		{
+			desc:     "Test 1",
+			input:    `len("")`,
+			expected: 0,
+		},
+		{
+			desc:     "Test 2",
+			input:    `len("four")`,
+			expected: 4,
+		},
+		{
+			desc:     "Test 3",
+			input:    `len("hello world")`,
+			expected: 11,
+		},
+		{
+			desc:     "Test 4",
+			input:    `len(1)`,
+			expected: "argument to `len` not supported, got=INTEGER",
+		},
+		{
+			desc:     "Test 5",
+			input:    `len("one", "two")`,
+			expected: "wrong number of arguments. want=1, got=2",
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			evaluated := testEval(tC.input)
+
+			switch expected := tC.expected.(type) {
+			case int:
+				testIntegerObject(t, evaluated, int64(expected))
+			case string:
+				errObj, ok := evaluated.(*object.Error)
+				if !ok {
+					t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+				}
+				if errObj.Message != expected {
+					t.Errorf("wrong error message. want=%q, got=%q", expected, errObj.Message)
+				}
+			}
+		})
+	}
+}
