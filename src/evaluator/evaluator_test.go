@@ -280,6 +280,11 @@ func TestErrorHandling(t *testing.T) {
 			input:    `"Hello" - "World"`,
 			expected: "unknown operator: STRING - STRING",
 		},
+		{
+			desc:     "Test 10",
+			input:    "999[1]",
+			expected: "index operator not supported: INTEGER",
+		},
 	}
 
 	for _, tC := range testCases {
@@ -519,4 +524,74 @@ func TestArrayLiterals(t *testing.T) {
 	testIntegerObject(t, arr.Elements[0], 1)
 	testIntegerObject(t, arr.Elements[1], 4)
 	testIntegerObject(t, arr.Elements[2], 6)
+}
+
+func TestArrayIndexExpressions(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected interface{}
+	}{
+		{
+			desc:     "Test 1",
+			input:    "[1, 2, 3][0]",
+			expected: 1,
+		},
+		{
+			desc:     "Test 2",
+			input:    "[1, 2, 3][1]",
+			expected: 2,
+		},
+		{
+			desc:     "Test 3",
+			input:    "[1, 2, 3][2]",
+			expected: 3,
+		},
+		{
+			desc:     "Test 4",
+			input:    "let i = 0; [1][i]",
+			expected: 1,
+		},
+		{
+			desc:     "Test 5",
+			input:    "[1, 2, 3][1 + 1]",
+			expected: 3,
+		},
+		{
+			desc:     "Test 6",
+			input:    "let myArray = [1, 2 , 3]; myArray[2];",
+			expected: 3,
+		},
+		{
+			desc:     "Test 7",
+			input:    "let myArray = [1, 2, 3]; myArray[0] + myArray[1] + myArray[2];",
+			expected: 6,
+		},
+		{
+			desc:     "Test 8",
+			input:    "let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i];",
+			expected: 2,
+		},
+		{
+			desc:     "Test 9",
+			input:    "[1, 2, 3][3]",
+			expected: nil,
+		},
+		{
+			desc:     "Test 10",
+			input:    "[1, 2, 3][-1]",
+			expected: nil,
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			evaluated := testEval(tC.input)
+			integer, ok := tC.expected.(int)
+			if ok {
+				testIntegerObject(t, evaluated, int64(integer))
+			} else {
+				testNullObject(t, evaluated)
+			}
+		})
+	}
 }
