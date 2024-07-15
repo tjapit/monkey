@@ -285,6 +285,11 @@ func TestErrorHandling(t *testing.T) {
 			input:    "999[1]",
 			expected: "index operator not supported: INTEGER",
 		},
+		{
+			desc:     "Test 11",
+			input:    `{"name": "Monkey"}[fn(x) { x }];`,
+			expected: "unusable as hash key: FUNCTION",
+		},
 	}
 
 	for _, tC := range testCases {
@@ -699,5 +704,60 @@ func TestHashLiterals(t *testing.T) {
 		}
 
 		testIntegerObject(t, pair.Value, expectedValue)
+	}
+}
+
+func TestHashIndexExpressions(t *testing.T) {
+	testCases := []struct {
+		desc     string
+		input    string
+		expected interface{}
+	}{
+		{
+			desc:     "Test 1",
+			input:    `{"foo": 5}["foo"]`,
+			expected: 5,
+		},
+		{
+			desc:     "Test 2",
+			input:    `{"foo": 5}["bar"]`,
+			expected: nil,
+		},
+		{
+			desc:     "Test 3",
+			input:    `let key= "foo"; {"foo":5}[key]`,
+			expected: 5,
+		},
+		{
+			desc:     "Test 4",
+			input:    `{}["foo"]`,
+			expected: nil,
+		},
+		{
+			desc:     "Test 5",
+			input:    `{5: 5}[5]`,
+			expected: 5,
+		},
+		{
+			desc:     "Test 6",
+			input:    `{true: 5}[true]`,
+			expected: 5,
+		},
+		{
+			desc:     "Test 7",
+			input:    `{false: 5}[false]`,
+			expected: 5,
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			evaluated := testEval(tC.input)
+			integer, ok := tC.expected.(int)
+			if ok {
+				testIntegerObject(t, evaluated, int64(integer))
+			} else {
+				testNullObject(t, evaluated)
+			}
+		})
 	}
 }
