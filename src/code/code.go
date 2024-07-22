@@ -31,6 +31,7 @@ func Lookup(op byte) (*Definiton, error) {
 	return def, nil
 }
 
+// Encodes the given Opcode and operands into a bytecode.
 func Make(op Opcode, operands ...int) []byte {
 	def, ok := definitions[op]
 	if !ok {
@@ -59,5 +60,25 @@ func Make(op Opcode, operands ...int) []byte {
 }
 
 func (ins *Instructions) String() string {
-  return ""
+	return ""
+}
+
+// Decodes bytecode made by Make(). Returns operands and number of bytes read.
+func ReadOperands(def *Definiton, operandsBytes []byte) ([]int, int) {
+	operands := make([]int, len(def.OperandWidths))
+	offset := 0
+
+	for i, width := range def.OperandWidths {
+		switch width {
+		case 2:
+			operands[i] = int(ReadUint16(operandsBytes[offset:]))
+		}
+
+		offset += width
+	}
+	return operands, offset
+}
+
+func ReadUint16(ins Instructions) uint16 {
+	return binary.BigEndian.Uint16(ins)
 }

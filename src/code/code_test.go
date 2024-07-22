@@ -67,3 +67,39 @@ func TestInstructionsString(t *testing.T) {
 		)
 	}
 }
+
+func TestReadOperands(t *testing.T) {
+	testCases := []struct {
+		desc      string
+		op        Opcode
+		operands  []int
+		bytesRead int
+	}{
+		{"Test 1", OpConstant, []int{65535}, 2},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			instruction := Make(tC.op, tC.operands...)
+
+			def, err := Lookup(byte(tC.op))
+			if err != nil {
+				t.Fatalf("definition not found: %q", err)
+			}
+
+			operandsRead, nBytes := ReadOperands(def, instruction[1:])
+			if nBytes != tC.bytesRead {
+				t.Fatalf("nBytes wrong. want=%d, got=%d", tC.bytesRead, nBytes)
+			}
+
+			for i, want := range tC.operands {
+				if operandsRead[i] != want {
+					t.Errorf(
+						"operand wrong. want=%d, got=%d",
+						want,
+						operandsRead[i],
+					)
+				}
+			}
+		})
+	}
+}
