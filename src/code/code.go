@@ -116,6 +116,6 @@ func ReadOperands(def *Definiton, operandsBytes []byte) ([]int, int) {
 	return operands, offset
 }
 
-func ReadUint16(ins Instructions) uint16 {
-	return binary.BigEndian.Uint16(ins)
+func ReadUint16(operand Instructions) uint16 {
+	return binary.BigEndian.Uint16(operand)
 }
