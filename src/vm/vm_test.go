@@ -36,8 +36,8 @@ func testIntegerObject(expected int64, actual object.Object) error {
 	if result.Value != expected {
 		return fmt.Errorf(
 			"object has wrong value. want=%d, got=%d",
-			result.Value,
 			expected,
+			result.Value,
 		)
 	}
 
@@ -88,7 +88,7 @@ func TestIntegerArithmetic(t *testing.T) {
 	testCases := []vmTestCase{
 		{"Test 1", "1", 1},
 		{"Test 2", "2", 2},
-		{"Test 3", "1 + 2", 2}, // FIXME
+		{"Test 3", "1 + 2", 3},
 	}
 
 	runVmTests(t, testCases)
