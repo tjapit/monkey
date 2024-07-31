@@ -16,6 +16,7 @@ func TestMake(t *testing.T) {
 			expected: []byte{byte(OpConstant), 255, 254},
 		},
 		{"Test 2", OpAdd, []int{}, []byte{byte(OpAdd)}},
+		{"Test 3", OpPop, []int{}, []byte{byte(OpPop)}},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -32,7 +33,7 @@ func TestMake(t *testing.T) {
 			for i, b := range tC.expected {
 				if instruction[i] != b {
 					t.Errorf(
-						"wrong byte at pos %d. want=%d, got=%d",
+						"wrong byte at pos %d. want=%q, got=%q",
 						i,
 						b,
 						instruction[i],
@@ -48,11 +49,13 @@ func TestInstructionsString(t *testing.T) {
 		Make(OpAdd),
 		Make(OpConstant, 2),
 		Make(OpConstant, 65535),
+		Make(OpPop),
 	}
 
 	expected := `0000 OpAdd
 0001 OpConstant 2
 0004 OpConstant 65535
+0007 OpPop
 `
 
 	concatted := Instructions{}
