@@ -35,7 +35,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 
 	if result.Value != expected {
 		return fmt.Errorf(
-			"object has wrong value. want=%d, got=%d",
+			"object has wrong value. want=%d, got =%d",
 			expected,
 			result.Value,
 		)

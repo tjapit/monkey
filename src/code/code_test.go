@@ -1,6 +1,8 @@
 package code
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestMake(t *testing.T) {
 	testCases := []struct {
@@ -24,7 +26,7 @@ func TestMake(t *testing.T) {
 
 			if len(instruction) != len(tC.expected) {
 				t.Errorf(
-					"instruction has wrong length. want=%d, got=%d",
+					"instruction has wrong length. want=%d, got =%d",
 					len(tC.expected),
 					len(instruction),
 				)
@@ -33,7 +35,7 @@ func TestMake(t *testing.T) {
 			for i, b := range tC.expected {
 				if instruction[i] != b {
 					t.Errorf(
-						"wrong byte at pos %d. want=%q, got=%q",
+						"wrong byte at pos %d. want=%q, got =%q",
 						i,
 						b,
 						instruction[i],
@@ -65,7 +67,7 @@ func TestInstructionsString(t *testing.T) {
 
 	if concatted.String() != expected {
 		t.Errorf(
-			"instructions wrongly formatted.\nwant=%q\ngot=%q",
+			"instructions wrongly formatted.\nwant=%q\ngot =%q",
 			expected,
 			concatted.String(),
 		)
@@ -92,13 +94,13 @@ func TestReadOperands(t *testing.T) {
 
 			operandsRead, nBytes := ReadOperands(def, instruction[1:])
 			if nBytes != tC.bytesRead {
-				t.Fatalf("nBytes wrong. want=%d, got=%d", tC.bytesRead, nBytes)
+				t.Fatalf("nBytes wrong. want=%d, got =%d", tC.bytesRead, nBytes)
 			}
 
 			for i, want := range tC.operands {
 				if operandsRead[i] != want {
 					t.Errorf(
-						"operand wrong. want=%d, got=%d",
+						"operand wrong. want=%d, got =%d",
 						want,
 						operandsRead[i],
 					)

@@ -56,7 +56,7 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	}
 	if result.Value != expected {
 		t.Errorf(
-			"object has incorrect value. want=%d, got=%d",
+			"object has incorrect value. want=%d, got =%d",
 			expected,
 			result.Value,
 		)
@@ -108,7 +108,7 @@ func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
 	}
 	if result.Value != expected {
 		t.Errorf(
-			"object has wrong value. want=%t, got=%t",
+			"object has wrong value. want=%t, got =%t",
 			expected,
 			result.Value,
 		)
@@ -307,7 +307,7 @@ func TestErrorHandling(t *testing.T) {
 			}
 			if errObj.Message != tC.expected {
 				t.Errorf(
-					"wrong error message. want=%q, got=%q",
+					"wrong error message. want=%q, got =%q",
 					tC.expected,
 					errObj.Message,
 				)
@@ -442,7 +442,11 @@ func TestStringLiteral(t *testing.T) {
 	}
 
 	if str.Value != expected {
-		t.Errorf("String has wrong value. want=%q, got=%q", expected, str.Value)
+		t.Errorf(
+			"String has wrong value. want=%q, got =%q",
+			expected,
+			str.Value,
+		)
 	}
 }
 
@@ -457,7 +461,11 @@ func TestStringConcatenation(t *testing.T) {
 	}
 
 	if str.Value != expected {
-		t.Errorf("String has wrong value. want=%q, got=%q", expected, str.Value)
+		t.Errorf(
+			"String has wrong value. want=%q, got =%q",
+			expected,
+			str.Value,
+		)
 	}
 }
 
@@ -485,12 +493,12 @@ func TestBuiltinFunction(t *testing.T) {
 		{
 			desc:     "Test 4",
 			input:    `len(1)`,
-			expected: "argument to `len` not supported, got=INTEGER",
+			expected: "argument to `len` not supported, got =INTEGER",
 		},
 		{
 			desc:     "Test 5",
 			input:    `len("one", "two")`,
-			expected: "wrong number of arguments. want=1, got=2",
+			expected: "wrong number of arguments. want=1, got =2",
 		},
 		{
 			desc:     "Test 6",
@@ -516,26 +524,30 @@ func TestBuiltinFunction(t *testing.T) {
 		{
 			"Test 11",
 			`first(1)`,
-			"argument to `first` must be ARRAY, got=INTEGER",
+			"argument to `first` must be ARRAY, got =INTEGER",
 		},
 		{
 			"Test 12",
 			`last([1, 2, 3], 1)`,
-			"wrong number of arguments. want=1, got=2",
+			"wrong number of arguments. want=1, got =2",
 		},
 		{"Test 13", `last([1, 2, 3])`, 3},
 		{"Test 14", `last([])`, nil},
-		{"Test 15", `last(1)`, "argument to `last` must be ARRAY, got=INTEGER"},
+		{
+			"Test 15",
+			`last(1)`,
+			"argument to `last` must be ARRAY, got =INTEGER",
+		},
 		{"Test 16", `rest([1, 2, 3])`, []int{2, 3}},
 		{"Test 17", `rest(rest([1, 2, 3]))`, []int{3}},
 		{"Test 18", `rest(rest(rest([1, 2, 3])))`, []int{}},
 		{"Test 19", `rest(rest(rest(rest([1, 2, 3]))))`, nil},
 		{"Test 20", `rest([])`, nil},
-		{"Test 21", `push(1)`, "wrong number of arguments. want=2, got=1"},
+		{"Test 21", `push(1)`, "wrong number of arguments. want=2, got =1"},
 		{
 			"Test 22",
 			`push(1, 1)`,
-			"first argument to `push` must be ARRAY, got=INTEGER",
+			"first argument to `push` must be ARRAY, got =INTEGER",
 		},
 		{"Test 23", `push([], 1)`, []int{1}},
 	}
@@ -555,7 +567,7 @@ func TestBuiltinFunction(t *testing.T) {
 					t.SkipNow()
 				}
 				if errObj.Message != expected {
-					t.Errorf("wrong error message. want=%q, got=%q", expected, errObj.Message)
+					t.Errorf("wrong error message. want=%q, got =%q", expected, errObj.Message)
 				}
 			case []int:
 				array, ok := evaluated.(*object.Array)
@@ -564,7 +576,7 @@ func TestBuiltinFunction(t *testing.T) {
 					t.SkipNow()
 				}
 				if len(array.Elements) != len(expected) {
-					t.Errorf("wrong num of elements. want=%d, got=%d",
+					t.Errorf("wrong num of elements. want=%d, got =%d",
 						len(expected), len(array.Elements))
 					t.SkipNow()
 				}
@@ -691,7 +703,7 @@ func TestHashLiterals(t *testing.T) {
 	}
 	if len(result.Pairs) != len(expected) {
 		t.Fatalf(
-			"Hash has wrong num of pairs. want=%d, got=%d",
+			"Hash has wrong num of pairs. want=%d, got =%d",
 			len(expected),
 			len(result.Pairs),
 		)

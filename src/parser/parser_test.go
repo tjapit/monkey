@@ -638,7 +638,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 
 		actual := program.String()
 		if actual != tt.expected {
-			t.Errorf("expected=%q, got=%q", tt.expected, actual)
+			t.Errorf("expected=%q, got =%q", tt.expected, actual)
 		}
 	}
 }
@@ -810,7 +810,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 
 	if len(function.Parameters) != 2 {
 		t.Fatalf(
-			"function literal parameters wrong. want=%d, got=%d",
+			"function literal parameters wrong. want=%d, got =%d",
 			2,
 			len(function.Parameters),
 		)
@@ -821,7 +821,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 
 	if len(function.Body.Statements) != 1 {
 		t.Fatalf(
-			"function.Body.Statements wrong. want=%d, got=%d",
+			"function.Body.Statements wrong. want=%d, got =%d",
 			1,
 			len(function.Body.Statements),
 		)
@@ -867,7 +867,7 @@ func TestFunctionParameters(t *testing.T) {
 
 		if len(function.Parameters) != len(tt.expParams) {
 			t.Errorf(
-				"length parameters wrong. want=%d, got=%d",
+				"length parameters wrong. want=%d, got =%d",
 				len(tt.expParams),
 				len(function.Parameters),
 			)
@@ -917,7 +917,7 @@ func TestCallExpressionParsing(t *testing.T) {
 
 	if len(exp.Arguments) != 3 {
 		t.Fatalf(
-			"incorrect length of arguments. want=%d, got=%d",
+			"incorrect length of arguments. want=%d, got =%d",
 			3,
 			len(exp.Arguments),
 		)
@@ -976,7 +976,7 @@ func TestCallExpressionArgumentParsing(t *testing.T) {
 
 			if len(exp.Arguments) != len(tC.expectedArgs) {
 				t.Fatalf(
-					"incorrect number of arguments. want=%d, got=%d",
+					"incorrect number of arguments. want=%d, got =%d",
 					len(tC.expectedArgs),
 					len(exp.Arguments),
 				)
@@ -985,7 +985,7 @@ func TestCallExpressionArgumentParsing(t *testing.T) {
 			for i, expectedArg := range tC.expectedArgs {
 				if exp.Arguments[i].String() != expectedArg {
 					t.Errorf(
-						"argument #%d wrong. want=%q, got=%q",
+						"argument #%d wrong. want=%q, got =%q",
 						i,
 						expectedArg,
 						exp.Arguments[i].String(),
@@ -1013,7 +1013,7 @@ func TestStringLiteralExpression(t *testing.T) {
 
 	if literal.Value != expected {
 		t.Errorf(
-			"literal.Value wrong. want=%q, got=%q",
+			"literal.Value wrong. want=%q, got =%q",
 			expected,
 			literal.Value,
 		)
@@ -1036,7 +1036,7 @@ func TestParsingArrayLiterals(t *testing.T) {
 
 	if len(array.Elements) != 3 {
 		t.Fatalf(
-			"len(array.Elements) incorrect. want=%d, got=%d",
+			"len(array.Elements) incorrect. want=%d, got =%d",
 			3,
 			len(array.Elements),
 		)
@@ -1085,7 +1085,7 @@ func TestParsingHashLiteralStringKeys(t *testing.T) {
 	}
 	if len(hash.Pairs) != len(expected) {
 		t.Errorf(
-			"hash.Pairs incorrect length. want=%d, got=%d",
+			"hash.Pairs incorrect length. want=%d, got =%d",
 			len(expected),
 			len(hash.Pairs),
 		)
@@ -1117,7 +1117,7 @@ func TestParsingEmptyHashLiteral(t *testing.T) {
 	}
 	if len(hash.Pairs) != len(expected) {
 		t.Errorf(
-			"hash.Pairs incorrect length. want=%d, got=%d",
+			"hash.Pairs incorrect length. want=%d, got =%d",
 			len(expected),
 			len(hash.Pairs),
 		)
@@ -1144,7 +1144,7 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 	}
 	if len(hash.Pairs) != len(expected) {
 		t.Errorf(
-			"hash.Pairs incorrect length. want=%d, got=%d",
+			"hash.Pairs incorrect length. want=%d, got =%d",
 			len(expected),
 			len(hash.Pairs),
 		)
