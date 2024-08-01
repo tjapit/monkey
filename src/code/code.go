@@ -18,6 +18,9 @@ const (
 	OpSub
 	OpMul
 	OpDiv
+
+	OpTrue
+	OpFalse
 )
 
 type Definiton struct {
@@ -30,9 +33,12 @@ var definitions = map[Opcode]*Definiton{
 	OpAdd:      {"OpAdd", []int{}},
 	OpPop:      {"OpPop", []int{}},
 
-	OpSub:      {"OpSub", []int{}},
-	OpMul:      {"OpMul", []int{}},
-	OpDiv:      {"OpDiv", []int{}},
+	OpSub: {"OpSub", []int{}},
+	OpMul: {"OpMul", []int{}},
+	OpDiv: {"OpDiv", []int{}},
+
+	OpTrue:  {"OpTrue", []int{}},
+	OpFalse: {"OpFalse", []int{}},
 }
 
 func Lookup(op byte) (*Definiton, error) {

@@ -195,3 +195,28 @@ func TestIntegerArithmetic(t *testing.T) {
 
 	runCompilerTests(t, testCases)
 }
+
+func TestBooleanExpression(t *testing.T) {
+	testCases := []compilerTestCase{
+		{
+			desc:              "Test 6",
+			input:             "true",
+			expectedConstants: []interface{}{},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpTrue),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			desc:              "Test 7",
+			input:             "false",
+			expectedConstants: []interface{}{},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpFalse),
+				code.Make(code.OpPop),
+			},
+		},
+	}
+
+	runCompilerTests(t, testCases)
+}
