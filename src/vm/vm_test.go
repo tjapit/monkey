@@ -29,7 +29,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 		return fmt.Errorf(
 			"object is not Integer. got=%T (%+v)",
 			result,
-			expected,
+			result,
 		)
 	}
 
@@ -78,7 +78,7 @@ func runVmTests(t *testing.T, testCases []vmTestCase) {
 			t.Fatalf("vm error: %s", err)
 		}
 
-		stackElem := vm.Peek()
+		stackElem := vm.LastPopped()
 
 		testExpectedObject(t, tC.expected, stackElem)
 	}

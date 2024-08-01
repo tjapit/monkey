@@ -62,8 +62,8 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		top := machine.Peek()
-		io.WriteString(out, top.Inspect())
+		lastPopped := machine.LastPopped()
+		io.WriteString(out, lastPopped.Inspect())
 		io.WriteString(out, "\n")
 	}
 }
