@@ -35,7 +35,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 
 	if result.Value != expected {
 		return fmt.Errorf(
-			"object has wrong value. want=%d, got =%d",
+			"object has wrong value. want=%d, got=%d",
 			expected,
 			result.Value,
 		)
@@ -52,7 +52,7 @@ func testBooleanObject(expected bool, actual object.Object) error {
 
 	if result.Value != expected {
 		return fmt.Errorf(
-			"object has wrong value. want=%t, got =%t",
+			"object has wrong value. want=%t, got=%t",
 			expected,
 			result.Value,
 		)
@@ -128,6 +128,23 @@ func TestBooleanExpressions(t *testing.T) {
 	testCases := []vmTestCase{
 		{"Test True", "true", true},
 		{"Test False", "false", false},
+		{"Test 1", "1 < 2", true},
+		{"Test 2", "1 > 2", false},
+		{"Test 3", "1 > 1", false},
+		{"Test 4", "1 < 1", false},
+		{"Test 5", "1 == 1", true},
+		{"Test 6", "1 != 1", false},
+		{"Test 7", "1 == 2", false},
+		{"Test 8", "1 != 2", true},
+		{"Test 9", "true == true", true},
+		{"Test 10", "false == false", true},
+		{"Test 11", "true == false", false},
+		{"Test 12", "true != false", true},
+		{"Test 13", "false != true", true},
+		{"Test 14", "(1 < 2) == true", true},
+		{"Test 15", "(1 < 2) == false", false},
+		{"Test 16", "(1 > 2) == true", false},
+		{"Test 17", "(1 > 2) == false", true},
 	}
 
 	runVmTests(t, testCases)
