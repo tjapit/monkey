@@ -27,12 +27,12 @@ const (
 	OpGreaterThan
 )
 
-type Definiton struct {
+type Definition struct {
 	Name          string
 	OperandWidths []int
 }
 
-var definitions = map[Opcode]*Definiton{
+var definitions = map[Opcode]*Definition{
 	OpConstant: {"OpConstant", []int{2}},
 	OpAdd:      {"OpAdd", []int{}},
 	OpPop:      {"OpPop", []int{}},
@@ -49,7 +49,7 @@ var definitions = map[Opcode]*Definiton{
 	OpGreaterThan: {"OpGreaterThan", []int{}},
 }
 
-func Lookup(op byte) (*Definiton, error) {
+func Lookup(op byte) (*Definition, error) {
 	def, ok := definitions[Opcode(op)]
 	if !ok {
 		return nil, fmt.Errorf("opcode %d undefined", op)
@@ -108,7 +108,7 @@ func (ins Instructions) String() string {
 	return out.String()
 }
 
-func (ins Instructions) fmtInstruction(def *Definiton, operands []int) string {
+func (ins Instructions) fmtInstruction(def *Definition, operands []int) string {
 	operandCount := len(def.OperandWidths)
 	if len(operands) != operandCount {
 		return fmt.Sprintf(
@@ -129,7 +129,7 @@ func (ins Instructions) fmtInstruction(def *Definiton, operands []int) string {
 }
 
 // Decodes bytecode made by Make(). Returns operands and number of bytes read.
-func ReadOperands(def *Definiton, operandsBytes []byte) ([]int, int) {
+func ReadOperands(def *Definition, operandsBytes []byte) ([]int, int) {
 	operands := make([]int, len(def.OperandWidths))
 	offset := 0
 
