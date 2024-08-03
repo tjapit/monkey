@@ -78,6 +78,38 @@ func (vm *VM) Run() error {
 				return err
 			}
 
+		case code.OpMinus:
+			obj := vm.pop()
+			if obj.Type() != object.INTEGER_OBJ {
+				return fmt.Errorf("unknown operator: -%s", obj.Type())
+			}
+
+			operand := obj.(*object.Integer).Value
+			err := vm.push(&object.Integer{Value: -operand})
+			if err != nil {
+				return err
+			}
+
+		case code.OpBang:
+			obj := vm.pop()
+			switch obj {
+			case True:
+				err := vm.push(False)
+				if err != nil {
+					return err
+				}
+			case False:
+				err := vm.push(True)
+				if err != nil {
+					return err
+				}
+			default:
+				err := vm.push(False)
+				if err != nil {
+					return err
+				}
+			}
+
 		}
 	}
 	return nil

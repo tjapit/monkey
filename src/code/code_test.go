@@ -27,6 +27,8 @@ func TestMake(t *testing.T) {
 		{"Test 9", OpEqual, []int{}, []byte{byte(OpEqual)}},
 		{"Test 10", OpNotEqual, []int{}, []byte{byte(OpNotEqual)}},
 		{"Test 11", OpGreaterThan, []int{}, []byte{byte(OpGreaterThan)}},
+		{"Test 12", OpMinus, []int{}, []byte{byte(OpMinus)}},
+		{"Test 13", OpBang, []int{}, []byte{byte(OpBang)}},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -68,6 +70,8 @@ func TestInstructionsString(t *testing.T) {
 		Make(OpEqual),
 		Make(OpNotEqual),
 		Make(OpGreaterThan),
+		Make(OpMinus),
+		Make(OpBang),
 	}
 
 	expected := `0000 OpAdd
@@ -82,6 +86,8 @@ func TestInstructionsString(t *testing.T) {
 0013 OpEqual
 0014 OpNotEqual
 0015 OpGreaterThan
+0016 OpMinus
+0017 OpBang
 `
 
 	concatted := Instructions{}
