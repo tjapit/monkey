@@ -79,35 +79,15 @@ func (vm *VM) Run() error {
 			}
 
 		case code.OpMinus:
-			obj := vm.pop()
-			if obj.Type() != object.INTEGER_OBJ {
-				return fmt.Errorf("unknown operator: -%s", obj.Type())
-			}
-
-			operand := obj.(*object.Integer).Value
-			err := vm.push(&object.Integer{Value: -operand})
+			err := vm.executeMinusOperator()
 			if err != nil {
 				return err
 			}
 
 		case code.OpBang:
-			obj := vm.pop()
-			switch obj {
-			case True:
-				err := vm.push(False)
-				if err != nil {
-					return err
-				}
-			case False:
-				err := vm.push(True)
-				if err != nil {
-					return err
-				}
-			default:
-				err := vm.push(False)
-				if err != nil {
-					return err
-				}
+			err := vm.executeBangOperator()
+			if err != nil {
+				return err
 			}
 
 		}
@@ -231,4 +211,31 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 		return True
 	}
 	return False
+}
+
+func (vm *VM) executeMinusOperator() error {
+	obj := vm.pop()
+	if obj.Type() != object.INTEGER_OBJ {
+		return fmt.Errorf("unsupported type for negation: %s", obj.Type())
+	}
+
+	operand := obj.(*object.Integer).Value
+	err := vm.push(&object.Integer{Value: -operand})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (vm *VM) executeBangOperator() error {
+	obj := vm.pop()
+	switch obj {
+	case True:
+		return vm.push(False)
+	case False:
+		return vm.push(True)
+	default:
+		return vm.push(False)
+	}
 }
