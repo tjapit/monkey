@@ -126,8 +126,8 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return err
 		}
 
-		// FIXME: Emit an `OpJumpNotTruthy` with bogus offset
-		c.emit(code.OpJumpNotTruthy, 9999)
+		// Emit an `OpJumpNotTruthy` with bogus offset
+		posJumpNotTruthy := c.emit(code.OpJumpNotTruthy, 9999)
 		err = c.Compile(node.Consequence)
 		if err != nil {
 			return err
@@ -136,6 +136,9 @@ func (c *Compiler) Compile(node ast.Node) error {
 		if c.lastInstructionIsPop() {
 			c.removeLastPop()
 		}
+
+		posAfterConsequence := len(c.instructions)
+		c.changeOperand(posJumpNotTruthy, posAfterConsequence)
 
 	case *ast.IntegerLiteral:
 		integer := &object.Integer{Value: node.Value}
@@ -192,4 +195,17 @@ func (c *Compiler) lastInstructionIsPop() bool {
 func (c *Compiler) removeLastPop() {
 	c.instructions = c.instructions[:c.lastInstruction.Position]
 	c.lastInstruction = c.previousInstruction
+}
+
+func (c *Compiler) setInstruction(pos int, newInstruction []byte) {
+	for i := 0; i < len(newInstruction); i++ {
+		c.instructions[pos+i] = newInstruction[i]
+	}
+}
+
+func (c *Compiler) changeOperand(opPos int, operand int) {
+	op := code.Opcode(c.instructions[opPos])
+	newInstruction := code.Make(op, operand)
+
+	c.setInstruction(opPos, newInstruction)
 }
