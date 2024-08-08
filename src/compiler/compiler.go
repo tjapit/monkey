@@ -126,18 +126,36 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return err
 		}
 
-		// Emit an `OpJumpNotTruthy` with bogus offset
-		posJumpNotTruthy := c.emit(code.OpJumpNotTruthy, 9999)
+		posJumpNotTruthy := c.emit(code.OpJumpNotTruthy, 9999) // Emit an `OpJumpNotTruthy` with bogus offset
 		err = c.Compile(node.Consequence)
 		if err != nil {
 			return err
 		}
 
 		if c.lastInstructionIsPop() {
-			c.removeLastPop()
+			c.removeLastPop() // remove extra OpPop from compiling Consequence
 		}
 
-		posAfterConsequence := len(c.instructions)
+		posAfterConsequence := len(c.instructions) // without Alternative
+
+		if node.Alternative != nil {
+			posJump := c.emit(code.OpJump, 9999) // Emit `OpJump` with bogus offset
+
+			posAfterConsequence = len(c.instructions) // with Alternative
+
+			err := c.Compile(node.Alternative)
+			if err != nil {
+				return err
+			}
+
+			if c.lastInstructionIsPop() {
+				c.removeLastPop()
+			}
+
+			posAfterAlternative := len(c.instructions)
+			c.changeOperand(posJump, posAfterAlternative)
+		}
+
 		c.changeOperand(posJumpNotTruthy, posAfterConsequence)
 
 	case *ast.IntegerLiteral:
